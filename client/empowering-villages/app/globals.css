@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-sans;
+}
+
+:root {
+  --color-background: 255 255 255;
+  --color-text: 17 24 39;
+  --color-primary: 29 78 216;
+}
+.dark {
+  --color-background: 17 24 39;
+  --color-text: 255 255 255;
+  --color-primary: 147 197 253;
+}
+
+.green {
+  --color-background: 240 253 244; 
+  --color-text: 0 76 51;            
+  --color-primary: 34 197 94;      
+}
+
+.red {
+  --color-background: 255 241 242; 
+  --color-text: 99 12 16;
+  --color-primary: 239 68 68;   
+}
+
+.orange {
+  --color-background: 255 247 237;
+  --color-text: 102 51 0;
+  --color-primary: 251 146 60;
+}
