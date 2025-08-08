@@ -47,7 +47,7 @@ function LoginForm() {
           role: selectedRole,
         };
         const data = await login(finalValues);
-        console.log(data?.user);
+        localStorage.setItem("token", data?.user.token);
         dispatch(setUser(data?.user));
         showToast(data?.message, "success");
         router.push("/dashboard");

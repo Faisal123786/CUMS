@@ -9,6 +9,8 @@ const VillageSchema = new mongoose.Schema(
     tehsil: { type: String, required: [true, "Tehsil is required"] },
     postalCode: { type: Number, required: [true, "Postal Code is required"] },
     image: { type: String },
+    employee_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User',required: false, },
+
   },
   {
     timestamps: true,

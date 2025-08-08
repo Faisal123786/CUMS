@@ -4,19 +4,42 @@ import { useTheme } from "../../context/ThemeProvider";
 import { logout } from "@/app/services/authService";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsFullscreen } from "react-icons/bs";
 import { IoIosNotifications } from "react-icons/io";
 import { FaMessage } from "react-icons/fa6";
-import { logoutUser } from "../../features/auth/authSlice";
+import { logoutUser, setUser } from "../../features/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
+export interface DecodedToken {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  exp?: number;
+  iat?: number;
+}
 export default function Navbar() {
   const { setIsSidebarCollapsed } = useTheme();
   const router = useRouter();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dispatch = useDispatch();
+ 
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const data = jwtDecode<DecodedToken>(token);
+        dispatch(setUser(data));
+      } catch (error) {
+        console.error("Invalid token", error);
+        dispatch(logoutUser());
+      }
+    }
+  }, [dispatch]);
 
   const logoutHandler = async () => {
     await logout();

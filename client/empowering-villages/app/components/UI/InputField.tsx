@@ -3,24 +3,29 @@ import React from "react";
 type InputValue = string | number | boolean | File | FileList | null | undefined;
 
 interface InputFieldProps {
-  type: React.HTMLInputTypeAttribute;
+  type?: React.HTMLInputTypeAttribute;
   name?: string;
   value?: InputValue;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => void;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
   label?: string;
   labelClassName?: string;
   error?: string;
+  component?: "input" | "select";
+  options?: { label: string; value: string }[];
 }
 
-// 🟢 use forwardRef to correctly pass the ref to the <input />
-const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+const InputField = React.forwardRef<
+  HTMLInputElement | HTMLSelectElement,
+  InputFieldProps
+>(
   (
     {
-      type,
+      component = "input",
+      type = "text",
       name,
       value,
       onChange,
@@ -31,6 +36,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       label,
       labelClassName = "",
       error,
+      options = [],
     },
     ref
   ) => {
@@ -43,25 +49,45 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             {label}
           </span>
         )}
-        <input
-          type={type}
-          name={name}
-          ref={ref} // ✅ attach forwarded ref here
-          {...(type !== "file" && {
-            value: value as string | number | readonly string[] | undefined,
-          })}
-          onChange={onChange}
-          onBlur={onBlur}
-          placeholder={placeholder}
-          className={`border px-3 py-2 outline-none rounded-full w-full ${className}`}
-          disabled={disabled}
-        />
+
+        {component === "select" ? (
+          <select
+            name={name}
+            ref={ref as React.Ref<HTMLSelectElement>}
+            value={value as string}
+            onChange={onChange}
+            onBlur={onBlur}
+            className={`border px-3 py-2 rounded-full w-full outline-none ${className}`}
+            disabled={disabled}
+          >
+            {options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type={type}
+            name={name}
+            ref={ref as React.Ref<HTMLInputElement>}
+            {...(type !== "file" && {
+              value: value as string | number | readonly string[] | undefined,
+            })}
+            onChange={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            className={`border px-3 py-2 rounded-full w-full outline-none ${className}`}
+            disabled={disabled}
+          />
+        )}
+
         {error && <p className="text-sm text-red-500 mt-1 ml-2">{error}</p>}
       </div>
     );
   }
 );
 
-InputField.displayName = "InputField"; // ✅ required for forwardRef components
+InputField.displayName = "InputField";
 
 export default InputField;

@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       onClick={onClick}
       disabled={isLoading}
-      className={`rounded text-white transition flex items-center gap-2 ${className}`}
+      className={`rounded text-white transition flex items-center justify-center gap-2 ${className}`}
       type={type}
     >
       {icon}

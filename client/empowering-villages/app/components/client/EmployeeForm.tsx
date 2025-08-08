@@ -1,57 +1,62 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import Button from "../UI/Button";
 import { RiResetLeftFill } from "react-icons/ri";
 import { SiTicktick } from "react-icons/si";
 import InputField from "../UI/InputField";
 import { useToaster } from "@/app/context/ToasterContext";
-import { addVillage } from "@/app/services/villageService";
-import { villageSchema } from "@/app/lib/validationSchema/schemas";
+import { employeeSchema } from "@/app/lib/validationSchema/schemas";
+import { addEmployee } from "@/app/services/employeeService";
+import { getAllvillageswithoutEmployee } from "@/app/services/villageService";
 
-interface VillageData {
+interface EmployeeData {
   name: string;
-  location: string;
-  nearerCity: string;
-  district: string;
-  tehsil: string;
-  postalCode: number | string;
-  image: File | null;
+  email: string;
+  password: string;
+  role: string;
+  area: string;
 }
 
-function VillageForm() {
+function EmployeeForm() {
   const { showToast } = useToaster();
   const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [villageData, setVillageData] = useState<
+    { _id: string; name: string }[]
+  >([]);
+  
+  useEffect(() => {
+    const fetchVillages = async () => {
+      try {
+        const data = await getAllvillageswithoutEmployee();
+        setVillageData(data?.data || []);
+      } catch (error) {
+        console.error("Error fetching villages", error);
+        showToast("Failed to load village options", "error");
+      }
+    };
+    fetchVillages();
+  }, []);
 
-  const formik = useFormik<VillageData>({
+  const formik = useFormik<EmployeeData>({
     initialValues: {
       name: "",
-      location: "",
-      nearerCity: "",
-      district: "",
-      tehsil: "",
-      postalCode: "",
-      image: null,
+      email: "",
+      password: "",
+      role: "Employee",
+      area: "",
     },
-    validationSchema: villageSchema,
-    onSubmit: async (values, { resetForm }) => {
+    validationSchema: employeeSchema,
+    onSubmit: async (values: any, { resetForm }) => {
       try {
         setIsLoading(true);
-        const formData = new FormData();
-        Object.entries(values).forEach(([key, value]) => {
-          formData.append(key, value as any);
-        });
-        const data = await addVillage(formData);
+        const data = await addEmployee(values);
         showToast(data?.message, "success");
       } catch (error: any) {
         showToast(error?.response?.data?.message, "error");
       } finally {
         setIsLoading(false);
         resetForm();
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
       }
     },
   });
@@ -80,74 +85,63 @@ function VillageForm() {
         {[
           {
             name: "name",
-            label: "Village Name*",
-            placeholder: "Enter Village Name",
+            label: "Employee Name*",
+            placeholder: "Enter Employee Name",
             type: "text",
           },
           {
-            name: "location",
-            label: "Village Location*",
-            placeholder: "Enter Village Location",
-            type: "text",
-          },
-         
-          {
-            name: "nearerCity",
-            label: "Village Nearer City*",
-            placeholder: "Enter Nearer City Of Village",
-            type: "text",
+            name: "email",
+            label: "Employee Email*",
+            placeholder: "Enter Employee Email",
+            type: "email",
           },
           {
-            name: "district",
-            label: "Village District*",
-            placeholder: "Enter District Of Village",
-            type: "text",
+            name: "password",
+            label: "Employee Password*",
+            placeholder: "Enter Employee Password",
+            type: "password",
           },
           {
-            name: "tehsil",
-            label: "Village Tehsil*",
-            placeholder: "Enter Tehsil Of Village",
+            name: "role",
+            label: "Employee Role*",
+            placeholder: "Enter Employee Role",
             type: "text",
-          },
-          {
-            name: "postalCode",
-            label: "Village Postal Code*",
-            placeholder: "Enter Postal Code Of Village",
-            type: "number",
+            disable: true,
           },
         ].map((field) => (
           <div key={field.name} className="w-full lg:w-[32%]">
             <InputField
-              name={field?.name}
-              type={field?.type}
+              name={field.name}
+              type={field.type}
               placeholder={field.placeholder}
-              value={formik.values[field.name as keyof VillageData]}
+              value={formik.values[field.name as keyof EmployeeData]}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className="py-2.5 border border-[#646FE4] px-2"
               label={field.label}
               labelClassName="text-white bg-[#646FE4]"
+              disabled={field.disable}
             />
           </div>
         ))}
 
         <div className="w-full lg:w-[32%]">
           <InputField
-            name="image"
-            type="file"
-            ref={fileInputRef}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              formik.setFieldValue("image", e.currentTarget.files?.[0] || null)
-            }
+            component="select"
+            name="area"
+            value={formik.values.area}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             className="py-2.5 border border-[#646FE4] px-2"
-            label="Village Image*"
-            labelClassName="text-white bg-gray-400"
-            error={
-              formik.touched.image && formik.errors.image
-                ? String(formik.errors.image)
-                : undefined
-            }
+            label="Employee Village*"
+            labelClassName="text-white bg-[#646FE4]"
+            options={[
+              { label: "Select Village", value: "" },
+              ...villageData.map((village) => ({
+                label: village.name,
+                value: village._id,
+              })),
+            ]}
           />
         </div>
       </div>
@@ -163,9 +157,6 @@ function VillageForm() {
           icon={<RiResetLeftFill />}
           onClick={() => {
             formik.resetForm();
-            if (fileInputRef.current) {
-              fileInputRef.current.value = "";
-            }
           }}
           isLoading={false}
         />
@@ -183,4 +174,4 @@ function VillageForm() {
   );
 }
 
-export default VillageForm;
+export default EmployeeForm;

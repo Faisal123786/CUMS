@@ -4,81 +4,62 @@ import Image from "next/image";
 import { FaEdit, FaTrash, FaLock } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import AddNewBox from "@/app/components/UI/AddNewBox";
-import { getAllvillages } from "@/app/services/villageService";
 import Loader from "../UI/Loader";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/lib/store";
 import { useRouter } from "next/navigation";
+import { getAllEmployee } from "@/app/services/employeeService";
 export default function VillagesList() {
-  const [villages, setVillages] = useState<any[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [unlockedVillages, setUnlockedVillages] = useState<string[]>([]);
-  const user = useSelector((state: RootState) => state.auth.user) as any;
-  const router = useRouter();
+ const router = useRouter();
 
   useEffect(() => {
-    const fetchVillages = async () => {
+    const fetchEmployee= async () => {
       try {
         setIsLoading(true);
-        const response = await getAllvillages();
-        console.log(response);
-        setVillages(response?.data || []);
+        const response = await getAllEmployee();
+        setEmployees(response?.data || []);
       } catch (error) {
-        console.error("Failed to fetch villages", error);
+        console.error("Failed to fetch Employee", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchVillages();
+    fetchEmployee();
   }, []);
 
+
   if (isLoading) {
-    return <Loader text="Loading Villages..." />;
+    return <Loader text="Loading Employees..." />;
   }
 
   return (
     <div className="mt-6 flex flex-wrap gap-5 justify-start">
-      {villages?.map((village) => {
-        const isLocked =
-          user?.role !== "Admin" &&
-          !unlockedVillages?.includes(village?._id?.toString()) &&
-          !(
-            user?.role === "Employee" &&
-            user?._id?.toString() === village?.employee_id?.toString()
-          );
-
+      {employees?.map((employees) => {
+       
         return (
           <div
-            key={village?._id}
+            key={employees?._id}
             className="relative border border-gray-200 rounded-xl p-4 bg-white shadow-sm w-full sm:w-44 flex flex-col items-center"
           >
             <div className="w-[80px] h-[80px] rounded-full overflow-hidden border border-[#EBEBEB] flex items-center justify-center">
-              <Image
-                src={`/uploads/${village?.image}`}
+              {/* <Image
+                src={`/uploads/${employees?.image}`}
                 alt="villageImage"
                 width={80}
                 height={80}
                 className="object-cover"
-              />
+              /> */}
             </div>
-            <span className="text-xs mt-0">{village?.name}</span>
-            <span className="text-sm font-semibold text-gray-500">
-              {village?.nearerCity}
-            </span>
-
+            <span className="text-xs mt-0">{employees?.name}</span>
             <div className="flex justify-center items-center gap-2 mt-3">
               <button
                 className="p-2 rounded-full bg-[#A2A4D9] text-white"
                 title="View Details"
               >
-                <IoIosSearch
-                  size={12}
-                  onClick={() => router.push(`villages/${village?._id}`)}
-                />
+                <IoIosSearch size={12} onClick={() => router.push('employee/detail')} />
               </button>
-              {user?.role === "Admin" && (
-                <>
+             
                   <button
                     className="p-2 rounded-full bg-[#698AF6] text-white"
                     title="Edit"
@@ -91,20 +72,12 @@ export default function VillagesList() {
                   >
                     <FaTrash size={12} />
                   </button>
-                </>
-              )}
             </div>
-
-            {isLocked && (
-              <div className="absolute inset-0 bg-[#364049] bg-opacity-60 rounded-xl flex items-center justify-center cursor-pointer">
-                <FaLock className="text-white text-2xl" />
-              </div>
-            )}
           </div>
         );
       })}
 
-      <AddNewBox path="/dashboard/villages/addNew" />
+      <AddNewBox path="/dashboard/employee/addNew" />
     </div>
   );
 }

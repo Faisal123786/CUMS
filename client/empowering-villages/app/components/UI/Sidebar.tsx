@@ -19,31 +19,53 @@ const menuItems = [
   {
     label: "Villages",
     icon: <GiVillage />,
-    roleAllowed: ["Admin","Donor"],
+    roleAllowed: ["Admin","Employee"],
     children: [
       {
         label: "All Villages",
         href: "/dashboard/villages",
-        roleAllowed: ["Admin"],
+        roleAllowed: ["Admin","Employee"],
       },
       {
         label: "Add New",
         href: "/dashboard/villages/addNew",
-        roleAllowed: ["Admin","Donor"],
+        roleAllowed: ["Admin"],
       },
     ],
   },
   {
-    label: "Profile",
+    label: "Employee",
     icon: <FaUser />,
-    href: "/dashboard/profile",
-    roleAllowed: ["Employee","Admin", "Donor"],
+    roleAllowed: ["Admin"],
+    children: [
+      {
+        label: "All Employee",
+        href: "/dashboard/employee",
+        roleAllowed: ["Admin"],
+      },
+      {
+        label: "Add New",
+        href: "/dashboard/employee/addNew",
+        roleAllowed: ["Admin"],
+      },
+      {
+        label: "Manage Login",
+        href: "/dashboard/employee/manage",
+        roleAllowed: ["Admin"],
+      },
+    ],
   },
   {
-    label: "Setting",
-    icon: <FaUser />,
-    href: "/dashboard/profile",
-    roleAllowed: ["Employee"],
+    label: "Transactions",
+    icon: <BiSolidDashboard />,
+    href: "",
+    roleAllowed: [],
+  },
+  {
+    label: "Wallet",
+    icon: <BiSolidDashboard />,
+    href: "",
+    roleAllowed: [],
   },
 ];
 

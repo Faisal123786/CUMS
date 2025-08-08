@@ -239,7 +239,7 @@ function RegisterForm() {
       <Button
         label="Sign Up"
         type="submit"
-        className="rounded-full w-full bg-[#0f5ef7] px-4 py-3 mt-5 text-white"
+        className="rounded-full w-full bg-[#0f5ef7] px-4 py-3 mt-5 text-white text-center"
         isLoading={isLoading}
         loadingText="Sign Up"
         icon=""

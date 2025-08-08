@@ -12,3 +12,14 @@ export const getAllvillages = async() => {
   return response.data
 };
 
+
+export const getVillageDetailById = async(id:string) => {
+   const response = await axios.get(`/dashboard/village-detail/${id}`);
+  return response.data
+};
+
+export const getAllvillageswithoutEmployee = async() => {
+   const response = await axios.get("/dashboard/villages/unassigned/");
+  return response.data
+};
+
