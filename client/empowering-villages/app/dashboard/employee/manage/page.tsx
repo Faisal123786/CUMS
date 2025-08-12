@@ -117,34 +117,23 @@ function Page() {
 
   return (
     <div className="p-4">
-      <div className="flex flex-col md:flex-row bg-white p-4 py-2 justify-between items-center rounded-lg gap-3">
-        <h1 className="font-semibold flex items-center gap-2 text-lg md:text-xl">
-          Employees | <GiVillage className="text-[25px]" /> - Staff Login
-        </h1>
+      <div>
+        <h2 className=" font-bold text-2xl text-text">Manage Employees</h2>
+        <p>Here you can manage all employee credentials.</p>
       </div>
 
-      <div className="mt-5 flex flex-col lg:flex-row gap-4 w-full items-start">
-        <div className="w-full lg:w-1/4 min-w-[200px] border rounded-md p-4 bg-white">
-          <div className="flex items-center gap-1 justify-center">
-            <IoSearchOutline size={23} />
-            <h1 className="text-[23px] font-semibold">Search</h1>
-          </div>
-
-          <div className="mt-5">
+      <div>
+        <div className="mt-3 w-full">
+          <div className=" rounded-lg py-4 bg-white relative">
             <InputField
               name="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="py-2 border border-[#646FE4] px-2"
+              className="py-2 border border-text px-2"
               placeholder="Search Employee"
               label="Search Employee*"
-              labelClassName="text-white bg-[#646FE4]"
+              labelClassName="text-white bg-background"
             />
-          </div>
-        </div>
-
-        <div className="w-full lg:w-[calc(75%-1rem)]">
-          <div className="border rounded-md p-4 bg-white relative">
             <div className="flex justify-between mb-4 flex-wrap gap-4">
               <div>
                 <label className="text-sm font-semibold block mb-2">
@@ -166,7 +155,7 @@ function Page() {
                           >
                             {(provided) => (
                               <span
-                                className="px-3 py-1 bg-purple-100 text-sm rounded cursor-move"
+                                className="px-3 py-1 bg-background/20 text-sm rounded cursor-move"
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
@@ -186,7 +175,7 @@ function Page() {
               <div className="self-end">
                 <button
                   onClick={() => setShowColumnControls((prev) => !prev)}
-                  className="text-sm font-semibold underline text-purple-600"
+                  className="text-sm font-semibold underline text-text"
                 >
                   {showColumnControls ? "Hide Columns ▲" : "Show Columns ▼"}
                 </button>
@@ -207,7 +196,7 @@ function Page() {
                         type="checkbox"
                         checked={visibleColumns.includes(col.key)}
                         onChange={() => handleToggleColumn(col.key)}
-                        className="w-4 h-4 accent-purple-500"
+                        className="w-4 h-4 accent-text"
                       />
                     </label>
                   ))}
@@ -263,7 +252,7 @@ function Page() {
                               return (
                                 <td key="email" className="px-6 py-4">
                                   <div className="flex items-center gap-2 border rounded-full px-3 py-1">
-                                    <MdOutlineMailOutline className="text-purple-500" />
+                                    <MdOutlineMailOutline className="text-text" />
                                     <input
                                       type="text"
                                       value={
@@ -286,7 +275,7 @@ function Page() {
                               return (
                                 <td key="password" className="px-6 py-4">
                                   <div className="flex items-center gap-2 border rounded-full px-3 py-1">
-                                    <BiSolidLockAlt className="text-purple-500" />
+                                    <BiSolidLockAlt className="text-text" />
                                     <input
                                       type={
                                         showPasswords[employee.id]
@@ -370,7 +359,7 @@ function Page() {
                   >
                     Previous
                   </button>
-                  <span className="px-3 py-1 bg-purple-500 text-white text-sm rounded">
+                  <span className="px-3 py-1 bg-text text-white text-sm rounded">
                     {currentPage}
                   </span>
                   <button

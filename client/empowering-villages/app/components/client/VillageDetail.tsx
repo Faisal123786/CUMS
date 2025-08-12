@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { IoChevronDown } from "react-icons/io5";
 import DisplayDataArrowLabel from "../UI/DisplayDataArrowLabel";
 import { getVillageDetailById } from "@/app/services/villageService";
 import Loader from "../UI/Loader";
@@ -11,6 +12,15 @@ function VillageDetail({ id }: { id: string }) {
   const [area, setArea] = useState<any>(null);
   const [wallet, setWallet] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+
+  // Multiple-open accordion state
+  const [openSections, setOpenSections] = useState<string[]>([]);
+
+  const toggleSection = (section: string) => {
+    setOpenSections(prev =>
+      prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]
+    );
+  };
 
   useEffect(() => {
     const fetchVillage = async () => {
@@ -63,63 +73,92 @@ function VillageDetail({ id }: { id: string }) {
     return <Loader text="Data Loading..." />;
   }
 
+  const Section = ({
+    title,
+    sectionKey,
+    children,
+  }: {
+    title: string;
+    sectionKey: string;
+    children: React.ReactNode;
+  }) => {
+    const isOpen = openSections.includes(sectionKey);
+    return (
+      <div
+        className={`transition-colors ${
+          isOpen ? "bg-gradient-to-r from-blue-50 to-white" : "bg-white"
+        }`}
+      >
+        <button
+          onClick={() => toggleSection(sectionKey)}
+          className="flex justify-between items-center w-full py-4 px-4 text-left font-semibold text-gray-800 hover:text-text transition-colors"
+        >
+          {title}
+          <IoChevronDown
+            className={`text-xl transition-transform duration-500 ${
+              isOpen ? "rotate-180 text-text" : ""
+            }`}
+          />
+        </button>
+        <div
+          className={`transition-all duration-500 ease-in-out overflow-hidden ${
+            isOpen ? "max-h-[1000px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"
+          }`}
+        >
+          <div className="p-4 flex flex-wrap items-center gap-2">
+            {children}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div>
-      <div className="flex justify-center flex-col items-center">
-        <div className="w-[120px] h-[120px] rounded-full overflow-hidden border border-[#EBEBEB] flex items-center justify-center">
+    <div className="bg-white rounded-xl overflow-hidden ">
+      <div className="p-4">
+        <div className="w-full h-[160px] rounded-xl overflow-hidden border border-gray-200 relative shadow-sm">
           {area?.image ? (
             <Image
               src={`/uploads/${area.image}`}
               alt="villageImage"
-              width={120}
-              height={120}
-              className="object-cover"
+              fill
+              className="object-cover object-center transition-transform duration-500 hover:scale-105"
             />
           ) : (
             <Image
               src="/default.png"
               alt="default"
-              width={120}
-              height={120}
-              className="object-cover"
+              fill
+              className="object-cover object-center"
             />
           )}
         </div>
-        <h2 className="font-bold text-[20px] text-[#8E5EF0] mt-2">
-          {area?.name || "Village"}
+        <h2 className="font-medium text-lg text-gray-800 mt-3">
+          <span className="font-bold text-text">Name:</span> {area?.name || "Village"}
         </h2>
       </div>
 
-      <div className="bg-[#F6F7FB] p-3 pt-2 mt-5 rounded-md">
-        <div className="space-y-2">
-          {villageInfo.map((item, index) => (
-            <div key={index}>
-              <DisplayDataArrowLabel label={item.label} value={item.value} />
-            </div>
-          ))}
-        </div>
-      </div>
+      <Section sectionKey="village" title="Village Information">
+        {villageInfo.map((item, index) => (
+          <DisplayDataArrowLabel key={index} label={item.label} value={item.value} />
+        ))}
+      </Section>
 
       {moderatorInfo.length > 0 && (
-        <div className="p-3 rounded-md">
-          <div className="space-y-2">
-            {moderatorInfo.map((item, index) => (
-              <div key={index}>
-                <DisplayDataArrowLabel label={item.label} value={item.value} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      <div className="bg-[#F6F7FB] p-3 pt-2 mt-5 rounded-md">
-        <div className="space-y-2">
-          {wallet.map((item, index) => (
-            <div key={index}>
-              <DisplayDataArrowLabel label={item.label} value={item.value} />
-            </div>
+        <Section sectionKey="employee" title="Employee Information">
+          {moderatorInfo.map((item, index) => (
+            <DisplayDataArrowLabel key={index} label={item.label} value={item.value} />
           ))}
-        </div>
-      </div>
+        </Section>
+      )}
+
+      {wallet && (
+        <Section sectionKey="wallet" title="Wallet Information">
+          {wallet.map((item, index) => (
+            <DisplayDataArrowLabel key={index} label={item.label} value={item.value} />
+          ))}
+        </Section>
+      )}
     </div>
   );
 }

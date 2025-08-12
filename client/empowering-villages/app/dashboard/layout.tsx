@@ -13,18 +13,19 @@ export default function DashboardLayout({
   const { isSidebarCollapsed } = useTheme();
 
   return (
-    <ThemeProvider>
-      <div className="flex flex-col h-screen">
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white">
-          <Navbar />
+    <div className="bg-white h-screen overflow-hidden">
+      <ThemeProvider>
+        <div className="flex flex-col h-full">
+          
+          <div className="flex flex-1 pt-0 relative h-[calc(100vh-4rem)]">
+            <Sidebar />
+            <div className="flex-1 px-1 py-4 bg-white mt-2 mr-1 ml-2 rounded-3xl h-full overflow-y-auto">
+            <Navbar />
+              {children}
+            </div>
+          </div>
         </div>
-
-        <div className="flex flex-1 pt-16 relative">
-          <Sidebar />
-
-          <div className="flex-1 overflow-y-auto p-4 bg-[#F6F7FB]">{children}</div>
-        </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
+    </div>
   );
 }

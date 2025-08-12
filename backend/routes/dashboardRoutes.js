@@ -3,6 +3,7 @@ import multer from 'multer';
 import { authorizeRole } from '../middleware/authMiddleware.js';
 import {addNewVillageHandler, getAllVillagesHandler,getAllVillageDetailHandler, getAllVillagesWithoutEmployeeIdHandler} from '../controllers/villageController.js'
 import { getAllEmployeeHandler, registerEmployee } from '../controllers/employeeController.js';
+import { getAllDonorEmplyeeAccepterCountHandler } from '../controllers/adminController.js';
 
 const router = express.Router();
 const upload = multer({ dest: '../client/empowering-villages/public/uploads' });
@@ -19,5 +20,9 @@ router.get("/villages/unassigned", authorizeRole("Admin"), getAllVillagesWithout
 
 router.post('/add-new-employee',authorizeRole("Admin"),registerEmployee)
 router.get("/employee",authorizeRole("Admin"), getAllEmployeeHandler);
+
+// Admin route
+
+router.get("/getAllStatsCount",authorizeRole("Admin"), getAllDonorEmplyeeAccepterCountHandler);
 
 export default router;

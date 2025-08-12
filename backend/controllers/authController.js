@@ -52,7 +52,7 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     const token = jwt.sign(
-      { id: user._id, role: user.role, name:user.name, email:user.email },
+      { id: user._id, role: user.role, name:user.name, email:user.email,...(user.area_id && { area_id: user.area_id }) },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -124,13 +124,14 @@ export const activateUser = async (req, res) => {
 export const logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: true,      // set to true only if using HTTPS
+    secure: true, 
     sameSite: "strict",
-    path: "/",         // must match how the cookie was set
+    path: "/",         
   });
 
-  // This still prints the token because it's from the current request
   console.log("Original token:", req.cookies.token);
 
   res.status(200).json({ message: "Cookie cleared" });
 }
+
+

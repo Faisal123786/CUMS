@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 export default function VillagesList() {
   const [villages, setVillages] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [unlockedVillages, setUnlockedVillages] = useState<string[]>([]);
   const user = useSelector((state: RootState) => state.auth.user) as any;
   const router = useRouter();
 
@@ -21,7 +20,6 @@ export default function VillagesList() {
       try {
         setIsLoading(true);
         const response = await getAllvillages();
-        console.log(response);
         setVillages(response?.data || []);
       } catch (error) {
         console.error("Failed to fetch villages", error);
@@ -42,34 +40,31 @@ export default function VillagesList() {
       {villages?.map((village) => {
         const isLocked =
           user?.role !== "Admin" &&
-          !unlockedVillages?.includes(village?._id?.toString()) &&
           !(
             user?.role === "Employee" &&
-            user?._id?.toString() === village?.employee_id?.toString()
+            user?.id?.toString() === village?.employee_id?.toString()
           );
 
         return (
           <div
             key={village?._id}
-            className="relative border border-gray-200 rounded-xl p-4 bg-white shadow-sm w-full sm:w-44 flex flex-col items-center"
+            className="relative shadow-xl border border-gray-200 rounded-lg p-2 bg-white w-full sm:w-44 flex flex-col items-center min-h-56 min-w-52"
           >
-            <div className="w-[80px] h-[80px] rounded-full overflow-hidden border border-[#EBEBEB] flex items-center justify-center">
+            <div className="w-full h-[150px] rounded-lg overflow-hidden relative">
               <Image
                 src={`/uploads/${village?.image}`}
                 alt="villageImage"
-                width={80}
-                height={80}
-                className="object-cover"
+                fill
+                className="object-cover object-center"
               />
             </div>
-            <span className="text-xs mt-0">{village?.name}</span>
-            <span className="text-sm font-semibold text-gray-500">
-              {village?.nearerCity}
-            </span>
 
-            <div className="flex justify-center items-center gap-2 mt-3">
+            <span className="text-xs my-2">{village?.name}</span>
+           
+
+            <div className="flex justify-center items-center gap-2">
               <button
-                className="p-2 rounded-full bg-[#A2A4D9] text-white"
+                className="p-2 rounded-md bg-[#A2A4D9] text-white"
                 title="View Details"
               >
                 <IoIosSearch
@@ -80,13 +75,13 @@ export default function VillagesList() {
               {user?.role === "Admin" && (
                 <>
                   <button
-                    className="p-2 rounded-full bg-[#698AF6] text-white"
+                    className="p-2 rounded-md bg-[#698AF6] text-white"
                     title="Edit"
                   >
                     <FaEdit size={12} />
                   </button>
                   <button
-                    className="p-2 rounded-full bg-[#F98A94] text-white"
+                    className="p-2 rounded-md bg-[#F98A94] text-white"
                     title="Delete"
                   >
                     <FaTrash size={12} />

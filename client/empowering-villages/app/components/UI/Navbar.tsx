@@ -26,7 +26,6 @@ export default function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dispatch = useDispatch();
- 
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -60,13 +59,13 @@ export default function Navbar() {
   };
 
   return (
-    <header className="h-16 bg-[#364049] border-b shadow flex items-center justify-between px-4 md:px-6">
-      <div className="flex items-center gap-2">
+    <header className="h-16 flex items-center justify-between md:pr-3 rounded-3xl">
+      <div className="flex items-center">
         <Image
-          src="https://eskooly.com/bb/assets/images/logo.png"
+          src={`/uploads/images5-removebg-preview.png`}
           alt="Logo"
-          width={100}
-          height={100}
+          width={150}
+          height={150}
         />
 
         <button
@@ -75,21 +74,22 @@ export default function Navbar() {
         >
           <FaBars />
         </button>
-
-        <button
-          className="text-sm text-gray-300 ml-9"
-          onClick={toggleFullscreen}
-        >
-          <BsFullscreen className="text-[20px]" />
-        </button>
       </div>
 
       <div className="flex items-center gap-5">
         <div>
-          <FaMessage className="text-[20px] text-gray-300" />
+          <button
+            className="text-sm text-gray-300 ml-9"
+            onClick={toggleFullscreen}
+          >
+            <BsFullscreen size={20} className=" text-black" />
+          </button>
         </div>
         <div>
-          <IoIosNotifications className="text-[30px] text-gray-300" />
+          <FaMessage size={20} className=" text-black" />
+        </div>
+        <div>
+          <IoIosNotifications size={30} className=" text-black" />
         </div>
         <div className="relative">
           <img

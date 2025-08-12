@@ -1,14 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply font-sans;
+  font-family: 'Quicksand', sans-serif;
 }
 
 :root {
-  --color-background: 255 255 255;
-  --color-text: 17 24 39;
+  --color-background: 82 148 174;
+  --color-text: 82 148 174;
   --color-primary: 29 78 216;
 }
 .dark {

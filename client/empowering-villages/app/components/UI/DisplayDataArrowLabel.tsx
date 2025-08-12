@@ -8,13 +8,14 @@ interface DisplayDataArrowLabelProps {
 
 function DisplayDataArrowLabel({ label, value }: DisplayDataArrowLabelProps) {
   return (
-    <div className="inline-block relative text-right">
-      <span className="text-[10px] text-[#6A6BE4] border-b border-[#6A6BE4] block leading-none">
+    <div className="shadow-md transition-shadow relative inline-block px-3 py-1.5 bg-white rounded-xl leading-tight">
+      <span className="block text-[11px] font-medium text-gray-500 tracking-wide uppercase leading-none">
         {label}
       </span>
-      <div className="absolute left-0 top-full mt-[-3px] flex items-center gap-1 w-max">
-        <BsArrowReturnRight className="text-[#6A6BE4]" size={18} />
-        <span className="text-blue-600 font-bold text-xs">{value}</span>
+
+      <div className="mt-0.5 flex items-center gap-1">
+        <BsArrowReturnRight className="text-text" size={14} />
+        <span className="text-text font-semibold text-sm leading-none">{value}</span>
       </div>
     </div>
   );

@@ -76,8 +76,8 @@ function EmployeeForm() {
 
   return (
     <form onSubmit={handleSubmitWithToast}>
-      <div className="border-b border-black font-semibold leading-none">
-        <span className="bg-black rounded-full text-white p-2 py-0">1</span>
+      <div className="border-b border-text font-semibold leading-none">
+        <span className="bg-background rounded-full text-white p-2 py-0">1</span>
         Basic Information
       </div>
 
@@ -117,9 +117,9 @@ function EmployeeForm() {
               value={formik.values[field.name as keyof EmployeeData]}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="py-2.5 border border-[#646FE4] px-2"
+              className="py-2.5 border border-text px-2"
               label={field.label}
-              labelClassName="text-white bg-[#646FE4]"
+              labelClassName="text-white bg-background"
               disabled={field.disable}
             />
           </div>
@@ -132,9 +132,9 @@ function EmployeeForm() {
             value={formik.values.area}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="py-2.5 border border-[#646FE4] px-2"
+            className="py-2.5 border border-text px-2"
             label="Employee Village*"
-            labelClassName="text-white bg-[#646FE4]"
+            labelClassName="text-white bg-background"
             options={[
               { label: "Select Village", value: "" },
               ...villageData.map((village) => ({
@@ -152,7 +152,7 @@ function EmployeeForm() {
         <Button
           label="Reset"
           type="button"
-          className="rounded-full w-fit bg-[#FFC26A] px-10 py-2 text-white"
+          className="rounded-lg w-fit bg-[#FFC26A] px-10 py-2 text-white"
           loadingText="Resetting"
           icon={<RiResetLeftFill />}
           onClick={() => {
@@ -164,7 +164,7 @@ function EmployeeForm() {
         <Button
           label="Submit"
           type="submit"
-          className="rounded-full w-fit bg-[#5756AB] px-10 py-2 text-white"
+          className="rounded-lg w-fit bg-background px-10 py-2 text-white"
           loadingText="Submitting"
           icon={<SiTicktick />}
           isLoading={isLoading}

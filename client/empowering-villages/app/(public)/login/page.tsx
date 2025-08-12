@@ -6,7 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { LuMessageCircleWarning } from "react-icons/lu";
 
-function RegisterPage() {
+function LoginPage() {
   return (
     <div className="w-full h-screen overflow-auto">
       <table className="table-auto w-full h-full border-collapse">
@@ -72,4 +72,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage;
+export default LoginPage;

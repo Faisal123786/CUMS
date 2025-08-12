@@ -10,10 +10,10 @@ import { getAllEmployee } from "@/app/services/employeeService";
 export default function VillagesList() {
   const [employees, setEmployees] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
- const router = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchEmployee= async () => {
+    const fetchEmployee = async () => {
       try {
         setIsLoading(true);
         const response = await getAllEmployee();
@@ -28,7 +28,6 @@ export default function VillagesList() {
     fetchEmployee();
   }, []);
 
-
   if (isLoading) {
     return <Loader text="Loading Employees..." />;
   }
@@ -36,42 +35,54 @@ export default function VillagesList() {
   return (
     <div className="mt-6 flex flex-wrap gap-5 justify-start">
       {employees?.map((employees) => {
-       
         return (
           <div
             key={employees?._id}
-            className="relative border border-gray-200 rounded-xl p-4 bg-white shadow-sm w-full sm:w-44 flex flex-col items-center"
+            className="relative shadow-xl border border-gray-200 rounded-lg p-2 bg-white w-full sm:w-44 flex flex-col items-center min-h-56 min-w-52"
           >
-            <div className="w-[80px] h-[80px] rounded-full overflow-hidden border border-[#EBEBEB] flex items-center justify-center">
-              {/* <Image
-                src={`/uploads/${employees?.image}`}
-                alt="villageImage"
-                width={80}
-                height={80}
-                className="object-cover"
-              /> */}
+            <div className="w-full h-[150px] rounded-lg overflow-hidden relative">
+              {employees?.image ? (
+                <Image
+                  src={`/uploads/${employees?.image}`}
+                  alt="employeeImage"
+                  fill
+                  className="object-cover object-center"
+                />
+              ) : (
+                <Image
+                  src={`/uploads/avatar-659652_1280.webp`}
+                  alt="employeeImage"
+                  fill
+                  className="object-cover object-center"
+                />
+              )}
             </div>
-            <span className="text-xs mt-0">{employees?.name}</span>
-            <div className="flex justify-center items-center gap-2 mt-3">
+
+            <span className="text-xs my-2">{employees?.name}</span>
+
+            <div className="flex justify-center items-center gap-2">
               <button
-                className="p-2 rounded-full bg-[#A2A4D9] text-white"
+                className="p-2 rounded-md bg-[#A2A4D9] text-white"
                 title="View Details"
               >
-                <IoIosSearch size={12} onClick={() => router.push('employee/detail')} />
+                <IoIosSearch
+                  size={12}
+                  onClick={() => router.push(`villages/${employees?._id}`)}
+                />
               </button>
-             
-                  <button
-                    className="p-2 rounded-full bg-[#698AF6] text-white"
-                    title="Edit"
-                  >
-                    <FaEdit size={12} />
-                  </button>
-                  <button
-                    className="p-2 rounded-full bg-[#F98A94] text-white"
-                    title="Delete"
-                  >
-                    <FaTrash size={12} />
-                  </button>
+
+              <button
+                className="p-2 rounded-md bg-[#698AF6] text-white"
+                title="Edit"
+              >
+                <FaEdit size={12} />
+              </button>
+              <button
+                className="p-2 rounded-md bg-[#F98A94] text-white"
+                title="Delete"
+              >
+                <FaTrash size={12} />
+              </button>
             </div>
           </div>
         );

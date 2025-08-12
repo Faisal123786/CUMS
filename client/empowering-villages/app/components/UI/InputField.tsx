@@ -44,7 +44,7 @@ const InputField = React.forwardRef<
       <div className="relative w-full my-1">
         {label && (
           <span
-            className={`px-3 text-xs absolute top-[-7px] left-5 z-10 rounded-full ${labelClassName}`}
+            className={`px-3 text-xs absolute top-[-7px] left-3 z-10 rounded-sm ${labelClassName}`}
           >
             {label}
           </span>
@@ -57,7 +57,7 @@ const InputField = React.forwardRef<
             value={value as string}
             onChange={onChange}
             onBlur={onBlur}
-            className={`border px-3 py-2 rounded-full w-full outline-none ${className}`}
+            className={`border px-3 py-2 rounded-lg w-full outline-none ${className}`}
             disabled={disabled}
           >
             {options.map((opt) => (
@@ -77,7 +77,7 @@ const InputField = React.forwardRef<
             onChange={onChange}
             onBlur={onBlur}
             placeholder={placeholder}
-            className={`border px-3 py-2 rounded-full w-full outline-none ${className}`}
+            className={`border px-3 py-2 rounded-lg w-full outline-none ${className}`}
             disabled={disabled}
           />
         )}

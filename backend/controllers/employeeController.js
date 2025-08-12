@@ -27,7 +27,11 @@ export const registerEmployee = async (req, res) => {
       { employee_id: newEmployee._id },
       { new: true, useFindAndModify: false }
     );
-
+    await User.findByIdAndUpdate(
+      newEmployee._id,
+      { area_id: area },
+      { new: true }
+    );
     if (role === "Employee") {
       const newWallet = new Wallet({
         moderator_id: newEmployee._id,

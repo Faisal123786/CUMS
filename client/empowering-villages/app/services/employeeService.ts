@@ -10,3 +10,7 @@ export const getAllEmployee = async() => {
   return response.data
 };
 
+export const gatAllStatsCount = async() => {
+    const response = await axios.get("/dashboard/getAllStatsCount");
+  return response.data
+};

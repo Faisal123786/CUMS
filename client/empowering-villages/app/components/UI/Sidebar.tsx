@@ -19,12 +19,12 @@ const menuItems = [
   {
     label: "Villages",
     icon: <GiVillage />,
-    roleAllowed: ["Admin","Employee"],
+    roleAllowed: ["Admin"],
     children: [
       {
         label: "All Villages",
         href: "/dashboard/villages",
-        roleAllowed: ["Admin","Employee"],
+        roleAllowed: ["Admin"],
       },
       {
         label: "Add New",
@@ -56,16 +56,21 @@ const menuItems = [
     ],
   },
   {
-    label: "Transactions",
-    icon: <BiSolidDashboard />,
-    href: "",
-    roleAllowed: [],
-  },
-  {
-    label: "Wallet",
-    icon: <BiSolidDashboard />,
-    href: "",
-    roleAllowed: [],
+    label: "Accepter",
+    icon: <FaUser />,
+    roleAllowed: ["Employee"],
+    children: [
+      {
+        label: "All Accepter",
+        href: "/dashboard/accepter",
+        roleAllowed: ["Employee"],
+      },
+      {
+        label: "Add New",
+        href: "/dashboard/accpter/addNew",
+        roleAllowed: ["Employee"],
+      },
+    ],
   },
 ];
 
@@ -83,6 +88,15 @@ export default function Sidebar() {
     setOpenMenu((prev) => (prev === label ? "" : label));
   };
 
+  const filteredMenuItems = menuItems
+    .filter((item) => item.roleAllowed?.includes(user?.role || ""))
+    .map((item) => ({
+      ...item,
+      children: item.children?.filter((child) =>
+        child.roleAllowed?.includes(user?.role || "")
+      ),
+    }));
+
   return (
     <>
       {!isSidebarCollapsed && (
@@ -93,119 +107,82 @@ export default function Sidebar() {
       )}
 
       <aside
-        className={`fixed top-16 left-0 h-full w-[300px] z-50 bg-white text-black p-4
+        className={`fixed top-20 left-1 h-full w-[300px] bg-gradient-to-b from-[#5295AE] to-[#4B75B6] z-50 text-black p-4
         transition-transform duration-300 ease-in-out
-        ${isSidebarCollapsed ? "-translate-x-full" : "translate-x-0"}
-        md:translate-x-0 md:static md:block shadow-lg shadow-black/20`}
+        ${isSidebarCollapsed ? "-translate-x-full" : "translate-x-1"}
+        md:translate-x-1 md:translate-y-2 md:static md:block rounded-3xl`}
       >
-        <h1 className="font-bold text-lg">Menu</h1>
+        <h1 className="font-bold text-lg text-white">Menu</h1>
         <ul className="mt-5 space-y-2">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             const isOpen = openMenu === item.label;
             const isParentActive = activeChild === item.label;
-            const isParentAllowed = item.roleAllowed?.includes(
-              user?.role || ""
-            );
 
             return (
               <li key={item.label}>
                 {item.href ? (
                   <Link
-                    href={isParentAllowed ? item.href : "#"}
-                    onClick={(e) => {
-                      if (!isParentAllowed) e.preventDefault();
-                      else {
-                        setOpenMenu(item.label);
-                        setActiveChild(item.label);
-                      }
+                    href={item.href}
+                    onClick={() => {
+                      setOpenMenu(item.label);
+                      setActiveChild(item.label);
                     }}
-                    className={`flex justify-between items-center cursor-pointer px-2 py-1 rounded transition
+                    className={`flex justify-between items-center cursor-pointer px-2 py-1 rounded-lg transition text-white
                       ${
                         isParentActive
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100"
+                          ? "bg-black text-gray-600"
+                          : "hover:bg-black"
                       }
-                      ${!isParentAllowed ? "opacity-50 cursor-not-allowed" : ""}
                     `}
                   >
                     <span className="flex items-center gap-3">
                       {item.icon}
                       <span>{item.label}</span>
                     </span>
-                    {!isParentAllowed && (
-                      <span className="text-gray-400">🔒</span>
-                    )}
                   </Link>
                 ) : (
                   <div
-                    onClick={() => {
-                      if (isParentAllowed) toggleMenu(item.label);
-                    }}
-                    className={`flex justify-between items-center cursor-pointer px-2 py-1 rounded transition
-                      ${
-                        isOpen
-                          ? "bg-blue-100 text-blue-600"
-                          : "hover:bg-gray-100"
-                      }
-                      ${!isParentAllowed ? "opacity-50 cursor-not-allowed" : ""}
+                    onClick={() => toggleMenu(item.label)}
+                    className={`flex justify-between items-center cursor-pointer px-2 py-1 rounded-lg transition text-white
+                      ${isOpen ? "bg-black text-white" : "hover:bg-black"}
                     `}
                   >
                     <span className="flex items-center gap-3">
                       {item.icon}
                       <span>{item.label}</span>
                     </span>
-                    {item.children &&
-                      isParentAllowed &&
-                      (isOpen ? <BsDash /> : <BsPlus />)}
-                    {!isParentAllowed && (
-                      <span className="text-gray-400">🔒</span>
-                    )}
+                    {item.children && (isOpen ? <BsDash /> : <BsPlus />)}
                   </div>
                 )}
 
-                {item.children && (
+                {item.children && item.children.length > 0 && (
                   <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    className={`overflow-hidden transition-all text-white duration-300 ease-in-out ${
                       isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                     }`}
                   >
-                    <ul className="ml-4 mt-2 space-y-1 text-sm border-l border-blue-500 pl-4 relative">
+                    <ul className="ml-4 mt-2 space-y-1 text-sm border-l border-white pl-4 relative">
                       {item.children.map((child) => {
-                        const isChildAllowed = child.roleAllowed?.includes(
-                          user?.role || ""
-                        );
                         const isActiveChild = activeChild === child.label;
-
                         return (
                           <li
                             key={child.label}
                             onClick={() => {
-                              if (!isChildAllowed) return;
                               setActiveChild(child.label);
                               setOpenMenu(item.label);
                             }}
                             className={`relative group ${
-                              isActiveChild ? "text-blue-600 font-medium" : ""
-                            } ${
-                              !isChildAllowed
-                                ? "opacity-50 cursor-not-allowed"
-                                : ""
+                              isActiveChild ? "text-black font-medium" : ""
                             }`}
                           >
                             <Link
-                              href={isChildAllowed ? child.href : "#"}
-                              onClick={(e) => {
-                                if (!isChildAllowed) e.preventDefault();
-                              }}
-                              className="block px-2 py-1 hover:text-blue-600"
+                              href={child.href}
+                              className="block px-2 py-1 hover:text-black"
                             >
                               {child.label}
-                              {!isChildAllowed && (
-                                <span className="ml-2 text-gray-400">🔒</span>
-                              )}
                             </Link>
                             <span
-                              className={`absolute -left-[20px] top-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-blue-500 transition duration-300 ${
+                              className={`absolute -left-[20px] top-1/2 -translate-y-1/2 h-2 w-2 rounded-lg bg-white transition duration-300 ${
                                 isActiveChild
                                   ? "opacity-100"
                                   : "opacity-0 group-hover:opacity-100"
